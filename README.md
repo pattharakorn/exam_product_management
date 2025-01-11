@@ -34,6 +34,19 @@ $ npm install
 
 ## Compile and run the project
 
+```bash for test
+# for run every thing in docker and use postman for test
+$ npm run start:docker
+```
+
+```bash for dev
+# run sql in docker
+$ docker-compose up db
+
+# run app in local
+$ npm run start:dev
+```
+
 ```bash
 # development
 $ npm run start

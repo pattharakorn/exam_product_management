@@ -9,8 +9,20 @@ export class Product {
   name: string;
 
   @Column()
+  barcode: string;
+
+  @Column()
   price: number;
 
   @Column()
+  qty: string;
+
+  @Column()
+  category: string;
+
+  @Column()
   description: string;
+
+  @Column()
+  isActive: Boolean;
 }

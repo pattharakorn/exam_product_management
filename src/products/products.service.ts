@@ -1,22 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Product } from './product.entity';
+import { ProductsRepository } from './products.repository';
+import { reqParamFindProduct } from './interfaces/product.interface';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
-  ) {}
+  constructor(private readonly productsRepository: ProductsRepository) {}
 
-  // ดึงรายการสินค้าทั้งหมดจากฐานข้อมูล
-  findAll(): Promise<Product[]> {
-    return this.productRepository.find();
+  async findWithQuery(query: reqParamFindProduct): Promise<Product[]> {
+    const products = await this.productsRepository.findWithQuery(query);
+    if (!products || products.length === 0) {
+      throw new BadRequestException('Product not found');
+    }
+    return products;
   }
 
   // เพิ่มสินค้าใหม่ลงฐานข้อมูล
   create(product: Product): Promise<Product> {
-    return this.productRepository.save(product);
+    return this.productsRepository.create(product);
   }
 }
