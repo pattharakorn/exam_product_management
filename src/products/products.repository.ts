@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Product } from './product.entity';
 import { reqParamFindProduct } from './interfaces/product.interface';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsRepository {
@@ -10,6 +12,10 @@ export class ProductsRepository {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
+
+  async findOneByID(id: number): Promise<Product> {
+    return await this.productRepository.findOneBy({ id });
+  }
 
   async findWithQuery(query: reqParamFindProduct): Promise<Product[]> {
     const queryBuilder = this.productRepository.createQueryBuilder('product');
@@ -36,8 +42,15 @@ export class ProductsRepository {
     return await queryBuilder.getMany();
   }
 
-  // เพิ่มสินค้าใหม่ลงฐานข้อมูล
-  create(product: Product): Promise<Product> {
-    return this.productRepository.save(product);
+  async create(product: CreateProductDto): Promise<Product> {
+    return await this.productRepository.save(product);
+  }
+
+  async update(product: UpdateProductDto): Promise<UpdateResult> {
+    return await this.productRepository.update(product.id, product);
+  }
+
+  async delete(id: number): Promise<DeleteResult> {
+    return await this.productRepository.delete({ id });
   }
 }
