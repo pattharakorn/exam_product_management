@@ -1,17 +1,20 @@
-# ใช้ Node.js version 16
-FROM node:16
+# Use Node.js base image
+FROM node:18-alpine
 
-# ตั้ง working directory ใน container
-WORKDIR /app
+# Set working directory
+WORKDIR /usr/src/app
 
-# คัดลอกไฟล์ package.json และ package-lock.json
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# ติดตั้ง dependencies
+# Install dependencies
 RUN npm install
 
-# คัดลอกโค้ดทั้งหมดไปยัง container
+# Copy all project files
 COPY . .
 
-# รันคำสั่งเริ่มต้น
-CMD ["npm", "run", "start:dev"]
+# Expose the application port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "run", "start"]
